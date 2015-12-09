@@ -1,4 +1,4 @@
-[package]                                                                                                                                          
+[package]
 name = "ruplicity-console"
 version = "0.0.1"
 authors = ["mbrt"]
@@ -7,3 +7,7 @@ repository = "https://github.com/mbrt/ruplicity-console"
 readme = "README.md"
 license = "MIT"
 keywords = ["duplicity", "backup"]
+
+[dependencies]
+clap = "1.5"
+ruplicity = { git = "https://github.com/mbrt/ruplicity" }
