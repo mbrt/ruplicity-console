@@ -39,9 +39,9 @@ fn main() {
         let backup = ordie(backup_from_path(path));
         let snapshot = {
             if let Ok(index) = value_t!(matches.value_of("index"), usize) {
-                backup.snapshots().nth(index)
+                ordie(backup.snapshots()).nth(index)
             } else {
-                backup.snapshots().last()
+                ordie(backup.snapshots()).last()
             }
         };
         match snapshot {

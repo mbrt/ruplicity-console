@@ -126,10 +126,9 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "ruplicity"
 version = "0.1.0"
-source = "git+https://github.com/mbrt/ruplicity#c1554ccb680ae1e08247842d36af53fe23fd05ca"
+source = "git+https://github.com/mbrt/ruplicity#96cb80a0f4932a63acf0807510afc0f1e24df0fa"
 dependencies = [
  "byteorder 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "clap 1.5.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "flate2 0.2.11 (registry+https://github.com/rust-lang/crates.io-index)",
  "regex 0.1.43 (registry+https://github.com/rust-lang/crates.io-index)",
  "tabwriter 0.1.24 (registry+https://github.com/rust-lang/crates.io-index)",
