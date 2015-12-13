@@ -6,9 +6,7 @@ use std::io::{self, Write};
 use std::path::Path;
 use std::process;
 
-use ruplicity::backend::Backend;
 use ruplicity::backend::local::LocalBackend;
-use ruplicity::collections::Collections;
 use ruplicity::Backup;
 
 
@@ -31,9 +29,9 @@ fn main() {
     if let Some(matches) = matches.subcommand_matches("info") {
         // calling unwrap is safe here, because INPUT is required
         let path = matches.value_of("INPUT").unwrap();
-        let backend = LocalBackend::new(path);
-        let collection = Collections::from_filenames(ordie(backend.file_names()));
-        println!("{}", collection);
+        let backup = ordie(backup_from_path(path));
+        let collection = ordie(backup.snapshots());
+        println!("{}", collection.as_ref());
     } else if let Some(matches) = matches.subcommand_matches("ls") {
         let path = matches.value_of("INPUT").unwrap();
         let backup = ordie(backup_from_path(path));
