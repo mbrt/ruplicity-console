@@ -126,7 +126,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "ruplicity"
 version = "0.1.0"
-source = "git+https://github.com/mbrt/ruplicity#96cb80a0f4932a63acf0807510afc0f1e24df0fa"
+source = "git+https://github.com/mbrt/ruplicity#173a3f36c4c01d118ac46f3da9911e021711b935"
 dependencies = [
  "byteorder 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "flate2 0.2.11 (registry+https://github.com/rust-lang/crates.io-index)",

@@ -32,7 +32,7 @@ fn main() {
         // calling unwrap is safe here, because INPUT is required
         let path = matches.value_of("INPUT").unwrap();
         let backend = LocalBackend::new(path);
-        let collection = Collections::from_filenames(ordie(backend.get_file_names()));
+        let collection = Collections::from_filenames(ordie(backend.file_names()));
         println!("{}", collection);
     } else if let Some(matches) = matches.subcommand_matches("ls") {
         let path = matches.value_of("INPUT").unwrap();
