@@ -8,6 +8,13 @@ readme = "README.md"
 license = "MIT"
 keywords = ["duplicity", "backup"]
 
+[features]
+default = []
+lints = ["clippy", "nightly"]
+nightly = [] # for building with nightly and unstable features
+unstable = ["lints", "nightly"] # for building with travis-cargo
+
 [dependencies]
 clap = "1.5"
 ruplicity = { git = "https://github.com/mbrt/ruplicity" }
+clippy = { version = "*", optional = true }
