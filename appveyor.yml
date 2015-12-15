@@ -2,11 +2,15 @@ environment:
   matrix:
     - TARGET: x86_64-pc-windows-gnu
       MSYS_BITS: 64
+      ARTIFACT: ruplicity-console-windows-mingw-amd64-$(APPVEYOR_REPO_TAG_NAME).zip
     - TARGET: i686-pc-windows-gnu
+      ARTIFACT: ruplicity-console-windows-mingw-i686-$(APPVEYOR_REPO_TAG_NAME).zip
       MSYS_BITS: 32
     - TARGET: x86_64-pc-windows-msvc
+      ARTIFACT: ruplicity-console-windows-amd64-$(APPVEYOR_REPO_TAG_NAME).zip
       VCVARS: "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\bin\\amd64\\vcvars64.bat"
     - TARGET: i686-pc-windows-msvc
+      ARTIFACT: ruplicity-console-windows-i686-$(APPVEYOR_REPO_TAG_NAME).zip
       VCVARS: "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\bin\\vcvars32.bat"
 
 install:
@@ -19,20 +23,27 @@ install:
   - cargo -V
 
 build_script:
-  - cargo build --verbose
+  - cargo build --verbose --release
+
+after_build:
+  - copy target\release\ruplicity-console.exe ruplicity-console.exe
+  - 7z a %ARTIFACT% ruplicity-console.exe LICENSE README.md
 
 test_script:
   - cargo test -- --nocapture
 
+artifacts:
+  - path: $(ARTIFACT)
+    name: zip
+
 deploy:
-  release: ruplicity-console-$(TARGET)-v$(APPVEYOR_REPO_TAG_NAME)
-  description: ''
+  description: "TODO: edit description"
   provider: GitHub
   auth_token:
     secure: zVY6XhdaRF5MOWb4168ZGOB0T7KlCf+tYntycx8+8xEfQXL9RN4HuAW155AHVj9i
-  artifact: target/release/ruplicity-console.exe
+  artifact: zip
   draft: true
   prerelease: true
   on:
-    branch: master                 # release from master branch only
     appveyor_repo_tag: true        # deploy on tag push only
+    MSYS_BITS: ""
