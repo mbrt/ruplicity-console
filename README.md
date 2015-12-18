@@ -14,6 +14,8 @@ Starting from Rust 1.5:
 cargo install ruplicity-console
 ```
 
+Windows user can download pre-built binaries for convenience in the [releases section](https://github.com/mbrt/ruplicity-console/releases). For those, Visual C++ 2015 redistributable binaries are needed. If you don't have them, you can download them in [Visual Studio Downloads](https://www.visualstudio.com/downloads/download-visual-studio-vs), under the "Tools for Visual Studio 2015" section.
+
 ## Usage
 
 Only backups present in the local file system are supported for now.
