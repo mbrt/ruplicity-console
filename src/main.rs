@@ -40,8 +40,8 @@ fn main() {
         // calling unwrap is safe here, because INPUT is required
         let path = matches.value_of("INPUT").unwrap();
         let backup = ordie(backup_from_path(path));
-        let collection = ordie(backup.snapshots());
-        println!("{}", collection.as_ref());
+        let snapshots = ordie(backup.snapshots());
+        println!("{}", snapshots.as_collections());
     } else if let Some(matches) = matches.subcommand_matches("ls") {
         let path = matches.value_of("INPUT").unwrap();
         let backup = ordie(backup_from_path(path));
@@ -54,8 +54,8 @@ fn main() {
         };
         match snapshot {
             Some(snapshot) => {
-                let files = ordie(snapshot.files());
-                println!("{}", files.as_signature_info().into_display());
+                let files = ordie(snapshot.entries());
+                println!("{}", files);
             }
             None => {
                 let _ = write!(&mut io::stderr(), "Cannot find the desired snapshot in the backup\n");
