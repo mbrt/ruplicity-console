@@ -1,6 +1,6 @@
 [package]
 name = "ruplicity-console"
-version = "0.0.1"
+version = "0.1.0"
 authors = ["mbrt"]
 description = "Command line interface to browse duplicity backups"
 repository = "https://github.com/mbrt/ruplicity-console"
@@ -16,5 +16,5 @@ unstable = ["lints", "nightly"] # for building with travis-cargo
 
 [dependencies]
 clap = "1.5"
-ruplicity = { git = "https://github.com/mbrt/ruplicity" }
+ruplicity = "0.2"
 clippy = { version = "*", optional = true }
