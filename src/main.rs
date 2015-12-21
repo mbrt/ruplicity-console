@@ -14,6 +14,8 @@ extern crate ruplicity;
 #[cfg(feature = "color")]
 extern crate term;
 
+mod console;
+
 use std::io::{self, Write};
 use std::path::Path;
 use std::process;
@@ -60,7 +62,7 @@ fn main() {
                 println!("{}", files.as_signature_info().into_display());
             }
             None => {
-                let _ = write!(&mut io::stderr(), "Cannot find the desired snapshot in the backup\n");
+                let _ = write!(&mut console::error(), "Cannot find the desired snapshot in the backup\n");
                 process::exit(1);
             }
         }
@@ -78,7 +80,7 @@ fn ordie<T, E: ToString>(r: Result<T, E>) -> T {
     match r {
         Ok(r) => r,
         Err(e) => {
-            let _ = writeln!(&mut io::stderr(), "{}", e.to_string());
+            let _ = writeln!(&mut console::error(), "{}", e.to_string());
             process::exit(1);
         }
     }
