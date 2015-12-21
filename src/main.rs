@@ -8,9 +8,11 @@
 #![cfg_attr(feature = "lints", feature(plugin))]
 #![cfg_attr(feature = "lints", plugin(clippy))]
 
-extern crate ruplicity;
 #[macro_use]
 extern crate clap;
+extern crate ruplicity;
+#[cfg(feature = "color")]
+extern crate term;
 
 use std::io::{self, Write};
 use std::path::Path;
@@ -76,7 +78,7 @@ fn ordie<T, E: ToString>(r: Result<T, E>) -> T {
     match r {
         Ok(r) => r,
         Err(e) => {
-            let _ = write!(&mut io::stderr(), "{}", e.to_string());
+            let _ = writeln!(&mut io::stderr(), "{}", e.to_string());
             process::exit(1);
         }
     }
