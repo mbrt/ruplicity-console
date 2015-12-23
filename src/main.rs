@@ -89,14 +89,20 @@ fn dump_info<B: Backend>(backup: &Backup<B>) {
                  chain.end_time().into_local_display());
         println!("Number of backup sets: {}", chain.inc_sets().count() + 1);
         println!("Number of volumes:     {}", num_vol);
-        println!("{:<20} {:<13} {:>12}",
-                 "Type of backup set:",
-                 "Time:",
-                 "Num volumes:");
-        println!("{}", chain.full_set());
-        for inc in chain.inc_sets() {
-            println!("{}", inc);
+
+        ordie(console_warn!("Backup sets (type, time, num volumes):"));
+        fn pset(set: &ruplicity::collections::BackupSet) {
+            println!("    {:<12} {:<13} {:>5}",
+                     if set.is_full() { "Full" } else { "Incremental" },
+                     set.end_time().into_local_display(),
+                     set.num_volumes());
         }
+        pset(chain.full_set());
+        for inc in chain.inc_sets() {
+            pset(inc);
+        }
+        // empty line between chains
+        println!("");
     }
 }
 
