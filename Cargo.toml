@@ -16,6 +16,7 @@ nightly = [] # for building with nightly and unstable features
 unstable = ["lints", "nightly"] # for building with travis-cargo
 
 [dependencies]
+log = "0.3"
 ruplicity = { git = "https://github.com/mbrt/ruplicity" }
 clap = { version = "1.5", default-features = false, features = ["suggestions"] }
 clippy = { version = "*", optional = true }

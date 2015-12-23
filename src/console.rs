@@ -4,16 +4,19 @@ macro_rules! console_print {
     ($out:expr, $pfn:expr, $arg:expr) => (
         writeln!($out, "{}", $pfn($arg));
     );
-    ($out:expr, $pfn:expr, $fmt:expr, $($arg:tt)+) => (
-        writeln!($out, $fmt, $($pfn($arg))+)
+    ($out:expr, $pfn:expr, $fmt:expr, $($arg:tt)*) => (
+        writeln!($out, $fmt, $($pfn($arg))*)
     )
 }
 
 
 macro_rules! console_err {
-    ($($arg:tt)+) => (
-        console_print!(&mut std::io::stderr(), $crate::console::err, $($arg)+)
-    )
+    ($fmt:expr) => {
+        writeln!(&mut std::io::stderr(), "{}", $crate::console::err($fmt));
+    };
+    ($fmt:expr, $($arg:tt)*) => {
+        writeln!(&mut std::io::stderr(), $fmt, $($crate::console::err($arg))*);
+    }
 }
 
 macro_rules! console_warn {

@@ -12,9 +12,12 @@
 extern crate ansi_term;
 #[macro_use]
 extern crate clap;
+#[macro_use]
+extern crate log;
 extern crate ruplicity;
 
 mod console;
+mod logger;
 
 use std::io::{self, Write};
 use std::path::Path;
@@ -41,6 +44,12 @@ fn main() {
         )
     ).get_matches();
 
+    // init logging functionality
+    if let Err(e) = logger::init() {
+        println!("Logger initialization error {}", e);
+        process::exit(1);
+    };
+
     if let Some(matches) = matches.subcommand_matches("info") {
         // calling unwrap is safe here, because INPUT is required
         let path = matches.value_of("INPUT").unwrap();
@@ -62,8 +71,7 @@ fn main() {
                 println!("{}", files);
             }
             None => {
-                ordie(console_err!("Cannot find the desired snapshot in the backup"));
-                process::exit(1);
+                fatal!("Cannot find the desired snapshot in the backup");
             }
         }
     }
@@ -110,8 +118,7 @@ fn ordie<T, E: ToString>(r: Result<T, E>) -> T {
     match r {
         Ok(r) => r,
         Err(e) => {
-            let _ = console_err!(e.to_string());
-            process::exit(1);
+            fatal!("{}", e.to_string());
         }
     }
 }
