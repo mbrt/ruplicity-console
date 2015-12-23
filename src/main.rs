@@ -14,7 +14,6 @@ extern crate ruplicity;
 #[cfg(feature = "color")]
 extern crate ansi_term;
 
-#[macro_use]
 mod console;
 
 use std::io::{self, Write};

@@ -1,4 +1,4 @@
-#[macro_use]
+#![macro_use]
 
 macro_rules! console_print {
     ($out:expr, $pfn:expr, $arg:expr) => (
