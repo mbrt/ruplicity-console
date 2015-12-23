@@ -59,7 +59,7 @@ fn main() {
         match snapshot {
             Some(snapshot) => {
                 let files = ordie(snapshot.entries());
-                println!("{}", files.as_signature().into_display());
+                println!("{}", files);
             }
             None => {
                 ordie(console_err!("Cannot find the desired snapshot in the backup"));
