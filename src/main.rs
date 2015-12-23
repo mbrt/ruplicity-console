@@ -8,16 +8,21 @@
 #![cfg_attr(feature = "lints", feature(plugin))]
 #![cfg_attr(feature = "lints", plugin(clippy))]
 
-extern crate ruplicity;
+#[cfg(feature = "color")]
+extern crate ansi_term;
 #[macro_use]
 extern crate clap;
+extern crate ruplicity;
+
+mod console;
 
 use std::io::{self, Write};
 use std::path::Path;
 use std::process;
 
+use ruplicity::{Backend, Backup};
 use ruplicity::backend::local::LocalBackend;
-use ruplicity::Backup;
+use ruplicity::time_utils::TimeDisplay;
 
 
 fn main() {
@@ -40,8 +45,7 @@ fn main() {
         // calling unwrap is safe here, because INPUT is required
         let path = matches.value_of("INPUT").unwrap();
         let backup = ordie(backup_from_path(path));
-        let snapshots = ordie(backup.snapshots());
-        println!("{}", snapshots.as_collections());
+        dump_info(&backup);
     } else if let Some(matches) = matches.subcommand_matches("ls") {
         let path = matches.value_of("INPUT").unwrap();
         let backup = ordie(backup_from_path(path));
@@ -58,7 +62,7 @@ fn main() {
                 println!("{}", files);
             }
             None => {
-                let _ = write!(&mut io::stderr(), "Cannot find the desired snapshot in the backup\n");
+                ordie(console_err!("Cannot find the desired snapshot in the backup"));
                 process::exit(1);
             }
         }
@@ -71,12 +75,42 @@ fn backup_from_path<P: AsRef<Path>>(path: P) -> io::Result<Backup<LocalBackend>>
     Backup::new(backend)
 }
 
-// taken from BurntSushi/tabwriter
+fn dump_info<B: Backend>(backup: &Backup<B>) {
+    let snapshots = ordie(backup.snapshots());
+    for chain in snapshots.as_collections().backup_chains() {
+        let num_vol = chain.full_set().num_volumes() +
+                      chain.inc_sets()
+                           .map(|i| i.num_volumes())
+                           .fold(0, |a, i| a + i);
+        ordie(console_good!("Backup chain"));
+        println!("Start time:            {}",
+                 chain.start_time().into_local_display());
+        println!("End time:              {}",
+                 chain.end_time().into_local_display());
+        println!("Number of backup sets: {}", chain.inc_sets().count() + 1);
+        println!("Number of volumes:     {}", num_vol);
+
+        ordie(console_warn!("Backup sets (type, time, num volumes):"));
+        fn pset(set: &ruplicity::collections::BackupSet) {
+            println!("    {:<12} {:<13} {:>5}",
+                     if set.is_full() { "Full" } else { "Incremental" },
+                     set.end_time().into_local_display(),
+                     set.num_volumes());
+        }
+        pset(chain.full_set());
+        for inc in chain.inc_sets() {
+            pset(inc);
+        }
+        // empty line between chains
+        println!("");
+    }
+}
+
 fn ordie<T, E: ToString>(r: Result<T, E>) -> T {
     match r {
         Ok(r) => r,
         Err(e) => {
-            let _ = write!(&mut io::stderr(), "{}", e.to_string());
+            let _ = console_err!(e.to_string());
             process::exit(1);
         }
     }

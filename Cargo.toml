@@ -9,12 +9,14 @@ license = "MIT"
 keywords = ["duplicity", "backup"]
 
 [features]
-default = []
+default = ["color"]
 lints = ["clippy", "nightly"]
+color = ["ansi_term", "clap/color"]
 nightly = [] # for building with nightly and unstable features
 unstable = ["lints", "nightly"] # for building with travis-cargo
 
 [dependencies]
-clap = "1.5"
-ruplicity = "0.2"
+ruplicity = { git = "https://github.com/mbrt/ruplicity" }
+clap = { version = "1.5", default-features = false, features = ["suggestions"] }
 clippy = { version = "*", optional = true }
+ansi_term = { version = "0.7", optional = true }
