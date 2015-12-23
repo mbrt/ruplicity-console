@@ -11,7 +11,7 @@ keywords = ["duplicity", "backup"]
 [features]
 default = ["color"]
 lints = ["clippy", "nightly"]
-color = ["term", "clap/color"]
+color = ["ansi_term", "clap/color"]
 nightly = [] # for building with nightly and unstable features
 unstable = ["lints", "nightly"] # for building with travis-cargo
 
@@ -19,4 +19,4 @@ unstable = ["lints", "nightly"] # for building with travis-cargo
 clap = { version = "1.5", default-features = false, features = ["suggestions"] }
 ruplicity = { git = "https://github.com/mbrt/ruplicity" }
 clippy = { version = "*", optional = true }
-term = { version = "0.2", optional = true }
+ansi_term = { version = "0.7", optional = true }

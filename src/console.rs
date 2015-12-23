@@ -1,45 +1,98 @@
-#[cfg(feature = "color")]
-pub use self::imp::Console;
-pub use self::imp::error;
+#[macro_use]
+
+macro_rules! console_print {
+    ($out:expr, $pfn:expr, $arg:expr) => (
+        writeln!($out, "{}", $pfn($arg));
+    );
+    ($out:expr, $pfn:expr, $fmt:expr, $($arg:tt)+) => (
+        writeln!($out, $fmt, $($pfn($arg))+)
+    )
+}
 
 
-#[cfg(not(feature = "color"))]
+macro_rules! console_err {
+    ($($arg:tt)+) => (
+        console_print!(&mut std::io::stderr(), $crate::console::err, $($arg)+)
+    )
+}
+
+macro_rules! console_warn {
+    ($($arg:tt)+) => (
+        console_print!(&mut std::io::stdout(), $crate::console::warn, $($arg)+)
+    )
+}
+
+macro_rules! console_good {
+    ($($arg:tt)+) => (
+        console_print!(&mut std::io::stdout(), $crate::console::good, $($arg)+)
+    )
+}
+
+
+pub use self::imp::{err, good, warn};
+
+
+#[cfg(all(feature = "color", not(target_os = "windows")))]
 mod imp {
-    use std::io;
+    use std::fmt;
 
-    pub fn error() -> io::Stderr {
-        io::stderr()
+    use ansi_term::Colour::{Green, Red, Yellow};
+    use ansi_term::ANSIString;
+
+    pub fn err<T: AsRef<str>>(t: T) -> Format<T> {
+        Format::Error(t)
+    }
+
+    pub fn warn<T: AsRef<str>>(t: T) -> Format<T> {
+        Format::Warning(t)
+    }
+
+    pub fn good<T: AsRef<str>>(t: T) -> Format<T> {
+        Format::Good(t)
+    }
+
+
+    /// Defines styles for different types of error messages. Defaults to Error=Red, Warning=Yellow,
+    /// and Good=Green
+    #[derive(Debug)]
+    pub enum Format<T> {
+        /// Defines the style used for errors, defaults to Red
+        Error(T),
+        /// Defines the style used for warnings, defaults to Yellow
+        Warning(T),
+        /// Defines the style used for good values, defaults to Green
+        Good(T),
+    }
+
+    impl<T: AsRef<str>> Format<T> {
+        fn format(&self) -> ANSIString {
+            match *self {
+                Format::Error(ref e) => Red.bold().paint(e.as_ref()),
+                Format::Warning(ref e) => Yellow.paint(e.as_ref()),
+                Format::Good(ref e) => Green.paint(e.as_ref()),
+            }
+        }
+    }
+
+    impl<T: AsRef<str>> fmt::Display for Format<T> {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            write!(f, "{}", &self.format())
+        }
     }
 }
 
 
-#[cfg(feature = "color")]
+#[cfg(any(not(feature = "color"), target_os = "windows"))]
 mod imp {
-    use std::io;
-    use std::ops::Drop;
-    use term;
-
-    pub struct Console(Box<term::StderrTerminal>);
-
-    pub fn error() -> Console {
-        let mut t = term::stderr().unwrap();
-        let _ = t.fg(term::color::RED);
-        Console(t)
+    pub fn err<T: AsRef<str>>(t: T) -> T {
+        t
     }
 
-    impl Drop for Console {
-        fn drop(&mut self) {
-            let _ = self.0.reset();
-        }
+    pub fn warn<T: AsRef<str>>(t: T) -> T {
+        t
     }
 
-    impl io::Write for Console {
-        fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
-            self.0.write(buf)
-        }
-
-        fn flush(&mut self) -> io::Result<()> {
-            self.0.flush()
-        }
+    pub fn good<T: AsRef<str>>(t: T) -> T {
+        t
     }
 }

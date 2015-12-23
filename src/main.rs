@@ -12,8 +12,9 @@
 extern crate clap;
 extern crate ruplicity;
 #[cfg(feature = "color")]
-extern crate term;
+extern crate ansi_term;
 
+#[macro_use]
 mod console;
 
 use std::io::{self, Write};
@@ -62,7 +63,7 @@ fn main() {
                 println!("{}", files.as_signature_info().into_display());
             }
             None => {
-                let _ = write!(&mut console::error(), "Cannot find the desired snapshot in the backup\n");
+                let _ = console_err!("Cannot find the desired snapshot in the backup");
                 process::exit(1);
             }
         }
@@ -75,12 +76,11 @@ fn backup_from_path<P: AsRef<Path>>(path: P) -> io::Result<Backup<LocalBackend>>
     Backup::new(backend)
 }
 
-// taken from BurntSushi/tabwriter
 fn ordie<T, E: ToString>(r: Result<T, E>) -> T {
     match r {
         Ok(r) => r,
         Err(e) => {
-            let _ = writeln!(&mut console::error(), "{}", e.to_string());
+            let _ = console_err!(e.to_string());
             process::exit(1);
         }
     }
