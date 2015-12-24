@@ -1,33 +1,40 @@
 #![macro_use]
 
-macro_rules! console_print {
-    ($out:expr, $pfn:expr, $arg:expr) => (
-        writeln!($out, "{}", $pfn($arg));
-    );
-    ($out:expr, $pfn:expr, $fmt:expr, $($arg:tt)+) => (
-        writeln!($out, $fmt, $($pfn($arg))+)
-    )
-}
-
-
 macro_rules! console_err {
-    ($($arg:tt)+) => (
-        console_print!(&mut std::io::stderr(), $crate::console::err, $($arg)+)
-    )
+    (target: $out:expr, $($arg:tt)+) => ({
+        writeln!(&mut $out, "{}", $crate::console::err(format!($($arg)+))).unwrap();
+    });
+    ($($arg:tt)+) => ({
+        writeln!(&mut ::std::io::stdout(), "{}", $crate::console::err(format!($($arg)+))).unwrap();
+    })
 }
 
 macro_rules! console_warn {
-    ($($arg:tt)+) => (
-        console_print!(&mut std::io::stdout(), $crate::console::warn, $($arg)+)
-    )
+    (target: $out:expr, $($arg:tt)+) => ({
+        writeln!(&mut $out, "{}", $crate::console::warn(format!($($arg)+))).unwrap();
+    });
+    ($($arg:tt)+) => ({
+        writeln!(&mut ::std::io::stdout(), "{}", $crate::console::warn(format!($($arg)+))).unwrap();
+    })
 }
 
 macro_rules! console_good {
-    ($($arg:tt)+) => (
-        console_print!(&mut std::io::stdout(), $crate::console::good, $($arg)+)
-    )
+    (target: $out:expr, $($arg:tt)+) => ({
+        writeln!(&mut $out, "{}", $crate::console::good(format!($($arg)+))).unwrap();
+    });
+    ($($arg:tt)+) => ({
+        writeln!(&mut ::std::io::stdout(), "{}", $crate::console::good(format!($($arg)+))).unwrap();
+    })
 }
 
+macro_rules! console_info {
+    (target: $out:expr, $($arg:tt)+) => ({
+        writeln!(&mut $out, $($arg)+).unwrap();
+    });
+    ($($arg:tt)+) => ({
+        writeln!(&mut ::std::io::stdout(), $($arg)+).unwrap();
+    })
+}
 
 pub use self::imp::{err, good, warn};
 
