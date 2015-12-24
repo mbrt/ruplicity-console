@@ -1,9 +1,7 @@
 #![macro_use]
 
-use std::io::{self, Write};
-
+use std::io::Write;
 use log;
-use console;
 
 macro_rules! fatal {
     ($($arg:tt)+) => {
@@ -30,10 +28,7 @@ impl log::Log for ConsoleLogger {
         if self.enabled(record.metadata()) {
             match record.level() {
                 log::LogLevel::Error => {
-                    writeln!(&mut io::stderr(),
-                             "{}",
-                             console::err(format!("{} - {}", record.level(), record.args())))
-                        .unwrap();
+                    console_err!("{} - {}", record.level(), record.args());
                 }
                 _ => {
                     println!("{} - {}", record.level(), record.args());
