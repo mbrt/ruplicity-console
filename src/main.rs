@@ -33,6 +33,7 @@ fn main() {
         (version: &crate_version!()[..])
         (author: "Michele Bertasi <@brt_device>")
         (about: "Command line client for inspecting duplicity backups")
+        (@arg verbose: -v ... +global "Sets the level of verbosity")
         (@subcommand info =>
             (about: "informations about snapshots present in a backup")
             (@arg INPUT: +required "the path to the backup")
@@ -45,7 +46,12 @@ fn main() {
     ).get_matches();
 
     // init logging functionality
-    if let Err(e) = logger::init() {
+    let log_level = match matches.occurrences_of("verbose") {
+        0 => log::LogLevelFilter::Error,
+        1 => log::LogLevelFilter::Debug,
+        _ => log::LogLevelFilter::Trace,
+    };
+    if let Err(e) = logger::init(log_level) {
         println!("Logger initialization error {}", e);
         process::exit(1);
     };
@@ -79,6 +85,7 @@ fn main() {
 
 
 fn backup_from_path<P: AsRef<Path>>(path: P) -> io::Result<Backup<LocalBackend>> {
+    info!("Loading backup from path {:?}", path.as_ref());
     let backend = LocalBackend::new(path);
     Backup::new(backend)
 }
