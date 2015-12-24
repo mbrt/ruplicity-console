@@ -33,7 +33,7 @@ fn main() {
         (version: &crate_version!()[..])
         (author: "Michele Bertasi <@brt_device>")
         (about: "Command line client for inspecting duplicity backups")
-        (@arg verbose: -v ... +global "Sets the level of verbosity")
+        (@arg verbose: -v ... +global "Sets the verbosity level; multiple occurrences increase the verbosity")
         (@subcommand info =>
             (about: "informations about snapshots present in a backup")
             (@arg INPUT: +required "the path to the backup")
@@ -48,7 +48,7 @@ fn main() {
     // init logging functionality
     let log_level = match matches.occurrences_of("verbose") {
         0 => log::LogLevelFilter::Error,
-        1 => log::LogLevelFilter::Debug,
+        1 => log::LogLevelFilter::Info,
         _ => log::LogLevelFilter::Trace,
     };
     if let Err(e) = logger::init(log_level) {
