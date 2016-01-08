@@ -92,29 +92,30 @@ fn backup_from_path<P: AsRef<Path>>(path: P) -> io::Result<Backup<LocalBackend>>
 
 fn dump_info<B: Backend>(backup: &Backup<B>) {
     let snapshots = ordie(backup.snapshots());
+    let mut index = 0;
     for chain in snapshots.as_collections().backup_chains() {
         let num_vol = chain.full_set().num_volumes() +
                       chain.inc_sets()
                            .map(|i| i.num_volumes())
                            .fold(0, |a, i| a + i);
         console_good!("Backup chain");
-        println!("Start time:            {}",
-                 chain.start_time().into_local_display());
-        println!("End time:              {}",
-                 chain.end_time().into_local_display());
-        println!("Number of backup sets: {}", chain.inc_sets().count() + 1);
-        println!("Number of volumes:     {}", num_vol);
-
-        console_warn!("Backup sets (type, time, num volumes):");
-        fn pset(set: &ruplicity::collections::BackupSet) {
-            println!("    {:<12} {:<13} {:>5}",
+        println!("{:<22} {}", "Start time:", chain.start_time().into_local_display());
+        println!("{:<22} {}", "End time:", chain.end_time().into_local_display());
+        println!("{:<22} {:>12}", "Number of backup sets:", chain.inc_sets().count() + 1);
+        println!("{:<22} {:>12}", "Number of volumes:", num_vol);
+        console_warn!("Backup sets (index, type, time, num volumes):");
+        fn pset(set: &ruplicity::collections::BackupSet, index: usize) {
+            println!("   {:>3} {:<12} {:<13} {:>5}",
+                     index,
                      if set.is_full() { "Full" } else { "Incremental" },
                      set.end_time().into_local_display(),
                      set.num_volumes());
         }
-        pset(chain.full_set());
+        pset(chain.full_set(), index);
+        index += 1;
         for inc in chain.inc_sets() {
-            pset(inc);
+            pset(inc, index);
+            index += 1;
         }
         // empty line between chains
         println!("");
