@@ -6,7 +6,7 @@ dependencies = [
  "clap 1.5.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "clippy 0.0.33 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)",
- "ruplicity 0.2.0 (git+https://github.com/mbrt/ruplicity)",
+ "ruplicity 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -144,8 +144,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "ruplicity"
-version = "0.2.0"
-source = "git+https://github.com/mbrt/ruplicity#81fe8095b1e30def80a4d89e553e773bdcbafdc5"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "byteorder 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "flate2 0.2.11 (registry+https://github.com/rust-lang/crates.io-index)",
