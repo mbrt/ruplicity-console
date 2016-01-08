@@ -32,10 +32,10 @@ And list the files for the last snapshot by using:
 ruplicity-console ls /media/foo/backup
 ```
 
-You can specify which snapshot to list by using the `-i` option, to specify an index (from 0, to the number of snapshots):
+You can specify which snapshot to list by using the `-i` option, to specify the snapshot index:
 
 ```
 ruplicity-console ls -i 0 /media/backup
 ```
 
-shows the files for the first backup snapshot.
+shows the files for the first backup snapshot. If you want to know the index for some snapshot use `ruplicity.console info`.
