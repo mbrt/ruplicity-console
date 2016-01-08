@@ -4,8 +4,6 @@
 
 Command line interface for [ruplicity](https://github.com/mbrt/ruplicity).
 
-WARNING: This project is under heavy development.
-
 ## Installation
 
 Starting from Rust 1.5:
