@@ -37,3 +37,10 @@ ruplicity-console ls -i 0 /media/backup
 ```
 
 shows the files for the first backup snapshot. If you want to know the index for some snapshot use `ruplicity.console info`.
+
+## License
+
+This crate is licensed through GPL-2.0. Why?
+* The core functionality is already licensed under MIT, because it is exposed trough [ruplicity](https://github.com/mbrt/ruplicity) crate, so you can use it in whatever form you want (even closed source projects).
+* This crate however provides a "product", and not a library, so I don't want anyone to fork it and close the sources (it could be possible with MIT license). Anyone is still free to use, contribute and modify it in whatever form they want. The only restriction is that they cannot change the license or integrate it in non-GPL projects;
+* The GPL license is not compatible with the Rust license, but since there is no reason in integrate this crate into the standard distribution, there is no point in make it compatible.
