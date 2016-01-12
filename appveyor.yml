@@ -1,17 +1,17 @@
 environment:
   matrix:
-    - TARGET: x86_64-pc-windows-gnu
-      MSYS_BITS: 64
-      ARTIFACT: ruplicity-console-windows-mingw-amd64-$(APPVEYOR_REPO_TAG_NAME).zip
-    - TARGET: i686-pc-windows-gnu
-      ARTIFACT: ruplicity-console-windows-mingw-i686-$(APPVEYOR_REPO_TAG_NAME).zip
-      MSYS_BITS: 32
     - TARGET: x86_64-pc-windows-msvc
-      ARTIFACT: ruplicity-console-windows-amd64-$(APPVEYOR_REPO_TAG_NAME).zip
+      ARTIFACT: ruplicity-console-$(APPVEYOR_REPO_TAG_NAME)-x86_64-pc-windows.zip
       VCVARS: "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\bin\\amd64\\vcvars64.bat"
     - TARGET: i686-pc-windows-msvc
-      ARTIFACT: ruplicity-console-windows-i686-$(APPVEYOR_REPO_TAG_NAME).zip
+      ARTIFACT: ruplicity-console-$(APPVEYOR_REPO_TAG_NAME)-i686-pc-windows.zip
       VCVARS: "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\bin\\vcvars32.bat"
+    - TARGET: x86_64-pc-windows-gnu
+      MSYS_BITS: 64
+      ARTIFACT: ruplicity-console-$(APPVEYOR_REPO_TAG_NAME)-x86_64-pc-windows-gnu.zip
+    - TARGET: i686-pc-windows-gnu
+      ARTIFACT: ruplicity-console-$(APPVEYOR_REPO_TAG_NAME)-i686-pc-windows-gnu.zip
+      MSYS_BITS: 32
 
 install:
   - ps: Start-FileDownload "https://static.rust-lang.org/dist/rust-nightly-${env:TARGET}.exe"
