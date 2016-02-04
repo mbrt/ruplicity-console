@@ -26,8 +26,7 @@ build_script:
   - cargo build --verbose --release
 
 after_build:
-  - copy target\release\ruplicity-console.exe ruplicity-console.exe
-  - 7z a %ARTIFACT% ruplicity-console.exe LICENSE README.md
+  - 7z a %ARTIFACT% .\target\release\ruplicity-console.exe LICENSE README.md
 
 test_script:
   - cargo test -- --nocapture
